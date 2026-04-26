@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Tooltip } from "@/components/tooltip"; // assuming a tooltip component exists or fallback to title attribute
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { Shipment, Order } from "@/types";
