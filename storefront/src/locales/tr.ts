@@ -14,6 +14,17 @@ export const tr = {
     subtitle: "Birinci sınıf meşe, çam ve metal mobilyalar — kendi bünyemizde hassasiyetle üretilmektedir. Her bir parça, MRP destekli tedarik zincirimiz tarafından desteklenmektedir.",
     collection: "Koleksiyonumuz",
     products_available: "ürün mevcut",
+    hero: {
+      title: "Eviniz İçin Premium Tasarımlar",
+      subtitle: "Ustalıkla üretilmiş, ömür boyu dayanacak şekilde tasarlanmış koleksiyonumuzu keşfedin.",
+      cta: "Koleksiyonu Keşfet",
+    },
+    filters: {
+      all: "Tümü",
+      tables: "Masalar",
+      chairs: "Sandalyeler",
+      storage: "Depolama",
+    }
   },
   product: {
     outOfStock: "Stokta Yok",
@@ -114,19 +125,7 @@ export const tr = {
       loyaltyPoints: "Sadakat Puanı",
     }
   },
-  home: {
-    hero: {
-      title: "Eviniz İçin Premium Tasarımlar",
-      subtitle: "Ustalıkla üretilmiş, ömür boyu dayanacak şekilde tasarlanmış koleksiyonumuzu keşfedin.",
-      cta: "Koleksiyonu Keşfet",
-    },
-    filters: {
-      all: "Tümü",
-      tables: "Masalar",
-      chairs: "Sandalyeler",
-      storage: "Depolama",
-    }
-  },
+
   tracking: {
     title: "Siparişinizi Takip Edin",
     subtitle: "Mobilyanızın yolculuğuna dair gerçek zamanlı güncellemeler",

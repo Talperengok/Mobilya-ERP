@@ -14,6 +14,17 @@ export const en = {
     subtitle: "Premium oak, pine, and metal furniture — manufactured in-house with precision. Every piece is backed by our MRP-driven supply chain.",
     collection: "Our Collection",
     products_available: "products available",
+    hero: {
+      title: "Premium Designs for Your Home",
+      subtitle: "Discover our collection of expertly crafted furniture, designed to last a lifetime.",
+      cta: "Explore Collection",
+    },
+    filters: {
+      all: "All",
+      tables: "Tables",
+      chairs: "Chairs",
+      storage: "Storage",
+    }
   },
   product: {
     outOfStock: "Out of Stock",
@@ -114,19 +125,7 @@ export const en = {
       loyaltyPoints: "Loyalty Points",
     }
   },
-  home: {
-    hero: {
-      title: "Premium Designs for Your Home",
-      subtitle: "Discover our collection of expertly crafted furniture, designed to last a lifetime.",
-      cta: "Explore Collection",
-    },
-    filters: {
-      all: "All",
-      tables: "Tables",
-      chairs: "Chairs",
-      storage: "Storage",
-    }
-  },
+
   tracking: {
     title: "Track Your Order",
     subtitle: "Real-time updates on your furniture's journey",
