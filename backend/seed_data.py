@@ -26,8 +26,43 @@ def seed():
 
     # --- ITEMS ---
     if db.query(Item).count() == 0:
-        # (Assuming items exist from previous runs, but defining for robustness)
-        pass
+        print("📦 Seeding Items...")
+        base_items = [
+            # Raw Materials
+            Item(sku="RM-SCREW-M6", name="M6 Steel Screw", item_type=ItemType.RAW_MATERIAL, unit="pcs", unit_cost=0.1, stock_quantity=10000, target_stock_level=10000, critical_stock_level=2000),
+            Item(sku="RM-WOOD-OAK", name="Oak Wood Panel", item_type=ItemType.RAW_MATERIAL, unit="m2", unit_cost=45.0, stock_quantity=500, target_stock_level=500, critical_stock_level=100),
+            Item(sku="RM-WOOD-PINE", name="Pine Wood Panel", item_type=ItemType.RAW_MATERIAL, unit="m2", unit_cost=25.0, stock_quantity=800, target_stock_level=800, critical_stock_level=150),
+            Item(sku="RM-VARNISH", name="Wood Varnish", item_type=ItemType.RAW_MATERIAL, unit="liters", unit_cost=15.0, stock_quantity=200, target_stock_level=200, critical_stock_level=50),
+            Item(sku="RM-STEEL-TUBE", name="Steel Tubing", item_type=ItemType.RAW_MATERIAL, unit="m", unit_cost=12.0, stock_quantity=1000, target_stock_level=1000, critical_stock_level=200),
+            Item(sku="RM-RUBBER-CAP", name="Rubber Leg Cap", item_type=ItemType.RAW_MATERIAL, unit="pcs", unit_cost=0.5, stock_quantity=2000, target_stock_level=2000, critical_stock_level=400),
+            Item(sku="RM-FOAM-SEAT", name="Seat Foam", item_type=ItemType.RAW_MATERIAL, unit="pcs", unit_cost=8.0, stock_quantity=300, target_stock_level=300, critical_stock_level=50),
+            Item(sku="RM-FABRIC-BLU", name="Blue Fabric", item_type=ItemType.RAW_MATERIAL, unit="m2", unit_cost=18.0, stock_quantity=400, target_stock_level=400, critical_stock_level=100),
+            Item(sku="RM-FABRIC-GRY", name="Grey Fabric", item_type=ItemType.RAW_MATERIAL, unit="m2", unit_cost=18.0, stock_quantity=400, target_stock_level=400, critical_stock_level=100),
+            Item(sku="RM-DOWEL", name="Wooden Dowel", item_type=ItemType.RAW_MATERIAL, unit="pcs", unit_cost=0.05, stock_quantity=5000, target_stock_level=5000, critical_stock_level=1000),
+            Item(sku="RM-HINGE", name="Cabinet Hinge", item_type=ItemType.RAW_MATERIAL, unit="pcs", unit_cost=2.5, stock_quantity=1000, target_stock_level=1000, critical_stock_level=200),
+            Item(sku="RM-DRAWER-SLD", name="Drawer Slider", item_type=ItemType.RAW_MATERIAL, unit="set", unit_cost=15.0, stock_quantity=500, target_stock_level=500, critical_stock_level=100),
+            Item(sku="RM-HANDLE", name="Metal Handle", item_type=ItemType.RAW_MATERIAL, unit="pcs", unit_cost=3.0, stock_quantity=1000, target_stock_level=1000, critical_stock_level=200),
+
+            # Sub Products
+            Item(sku="SP-TABLE-TOP-OAK", name="Oak Table Top (Treated)", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=110.0, stock_quantity=50, target_stock_level=50, critical_stock_level=10),
+            Item(sku="SP-TABLE-TOP-PINE", name="Pine Table Top (Treated)", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=70.0, stock_quantity=50, target_stock_level=50, critical_stock_level=10),
+            Item(sku="SP-METAL-LEG", name="Finished Metal Leg", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=15.0, stock_quantity=200, target_stock_level=200, critical_stock_level=40),
+            Item(sku="SP-SEAT-PAD-BLU", name="Blue Seat Pad", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=35.0, stock_quantity=40, target_stock_level=40, critical_stock_level=10),
+            Item(sku="SP-SEAT-PAD-GRY", name="Grey Seat Pad", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=35.0, stock_quantity=40, target_stock_level=40, critical_stock_level=10),
+            Item(sku="SP-DRAWER-BOX", name="Assembled Drawer Box", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=45.0, stock_quantity=30, target_stock_level=30, critical_stock_level=5),
+            Item(sku="SP-CABINET-FRAME", name="Pine Cabinet Frame", item_type=ItemType.SUB_PRODUCT, unit="pcs", unit_cost=105.0, stock_quantity=20, target_stock_level=20, critical_stock_level=5),
+
+            # Finished Goods
+            Item(sku="FG-DINING-TABLE-OAK", name="Premium Oak Dining Table", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=180.0, selling_price=599.0, stock_quantity=15, target_stock_level=20, critical_stock_level=5),
+            Item(sku="FG-DINING-TABLE-PINE", name="Classic Pine Dining Table", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=140.0, selling_price=399.0, stock_quantity=25, target_stock_level=30, critical_stock_level=10),
+            Item(sku="FG-OFFICE-CHAIR-BLU", name="Ergonomic Office Chair (Blue)", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=65.0, selling_price=189.0, stock_quantity=40, target_stock_level=50, critical_stock_level=15),
+            Item(sku="FG-OFFICE-CHAIR-GRY", name="Ergonomic Office Chair (Grey)", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=65.0, selling_price=189.0, stock_quantity=35, target_stock_level=50, critical_stock_level=15),
+            Item(sku="FG-BOOKSHELF", name="Tall Pine Bookshelf", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=120.0, selling_price=299.0, stock_quantity=20, target_stock_level=30, critical_stock_level=8),
+            Item(sku="FG-NIGHTSTAND", name="Pine Nightstand", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=95.0, selling_price=159.0, stock_quantity=30, target_stock_level=40, critical_stock_level=10),
+            Item(sku="FG-TV-STAND", name="Modern TV Stand", item_type=ItemType.FINISHED_GOOD, unit="pcs", unit_cost=210.0, selling_price=450.0, stock_quantity=10, target_stock_level=15, critical_stock_level=3),
+        ]
+        db.add_all(base_items)
+        db.commit()
 
     items = {i.sku: i for i in db.query(Item).all()}
 
