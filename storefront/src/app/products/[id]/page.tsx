@@ -84,7 +84,7 @@ export default function ProductDetailPage() {
             </div>
             <div className="flex justify-between py-2 border-b border-neutral-800">
               <span>{t.product.inStock}</span>
-              <span className="text-neutral-200">{product.available_stock} {product.unit}</span>
+              <span className="text-neutral-200">{product.available_stock || 0} {product.unit}</span>
             </div>
           </div>
 

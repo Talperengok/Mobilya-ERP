@@ -61,7 +61,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
           </Link>
           <button
             onClick={() => addItem({ id: product.id, name: product.name, sku: product.sku, price: product.selling_price, available_stock: product.available_stock || 0 })}
-            disabled={product.available_stock <= 0}
+            disabled={(product.available_stock || 0) <= 0}
             className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-black font-medium rounded-xl text-sm transition-colors"
           >
             <ShoppingBag size={16} /> {t.product.add}
