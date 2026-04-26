@@ -47,7 +47,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
           <div>
             <p className="text-2xl font-bold text-amber-400">{formatCurrency(product.selling_price)}</p>
             <p className="text-xs text-neutral-500 mt-0.5">
-              {product.available_stock > 0 ? `${product.available_stock} ${t.product.inStock}` : t.product.outOfStock}
+              {(product.available_stock || 0) > 0 ? `${product.available_stock || 0} ${t.product.inStock}` : t.product.outOfStock}
             </p>
           </div>
         </div>
