@@ -169,23 +169,25 @@ def seed():
     # --- USERS (Quick Login Accounts) ---
     print("👤 Checking/Seeding Quick Login Users...")
     quick_users = [
-        ("admin@mobilya.com", "admin123", UserRole.ADMIN),
-        ("fabrika@mobilya.com", "fabrika123", UserRole.FACTORY_MANAGER),
-        ("lojistik@mobilya.com", "lojistik123", UserRole.LOGISTICS_OFFICER),
-        ("satis@mobilya.com", "satis123", UserRole.SALES_REP),
+        ("admin@mobilya.com", "admin123", UserRole.ADMIN, "Sistem Yöneticisi"),
+        ("fabrika@mobilya.com", "fabrika123", UserRole.FACTORY_MANAGER, "Fabrika Müdürü"),
+        ("lojistik@mobilya.com", "lojistik123", UserRole.LOGISTICS_OFFICER, "Lojistik Sorumlusu"),
+        ("satis@mobilya.com", "satis123", UserRole.SALES_REP, "Satış Temsilcisi"),
     ]
 
-    for email, password, role in quick_users:
+    for email, password, role, full_name in quick_users:
         existing = db.query(User).filter(User.email == email).first()
         if existing:
             # Update password to match frontend presets
             existing.hashed_password = hash_password(password)
             existing.role = role
+            existing.full_name = full_name
         else:
             db.add(User(
                 email=email,
                 hashed_password=hash_password(password),
                 role=role,
+                full_name=full_name,
             ))
     db.flush()
 
