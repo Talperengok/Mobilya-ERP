@@ -127,7 +127,7 @@ export default function CatalogPage() {
                 <button className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-md rounded-full text-white/50 hover:text-red-500 transition-colors">
                   <Heart size={20} />
                 </button>
-                {product.available_stock <= 0 && (
+                {(product.available_stock || 0) <= 0 && (
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
                     <span className="px-4 py-2 bg-neutral-800 text-white text-xs font-bold rounded-full uppercase tracking-widest">
                       Out of Stock

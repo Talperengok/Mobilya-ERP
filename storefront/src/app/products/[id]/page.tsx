@@ -90,7 +90,7 @@ export default function ProductDetailPage() {
 
           <button
             onClick={handleAdd}
-            disabled={product.available_stock <= 0}
+            disabled={(product.available_stock || 0) <= 0}
             className="w-full flex items-center justify-center gap-3 py-4 bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-black font-semibold rounded-xl text-lg transition-colors"
           >
             {added ? (
