@@ -151,7 +151,7 @@ export default function AccountPage() {
                     <div className="flex flex-wrap items-center gap-4 sm:gap-8">
                       <div className="text-right">
                         <p className="text-xs text-neutral-500">{t.account.total}</p>
-                        <p className="font-semibold">{formatCurrency(order.total_amount, locale === "tr" ? "TRY" : "USD", locale === "tr" ? "tr-TR" : "en-US")}</p>
+                        <p className="font-semibold">{formatCurrency(order.total_amount)}</p>
                       </div>
 
                       <div className="flex items-center gap-3">
