@@ -91,7 +91,7 @@ const navItems: NavItem[] = [
 ];
 
 // ── Role badge labels (localized via t.roles) ──
-const roleBadgeColors: Record<UserRole, { bg: string; key: keyof typeof tr.roles }> = {
+const roleBadgeColors: Record<UserRole, { bg: string; key: "admin" | "manager" | "logistics" | "sales" }> = {
   ADMIN: { bg: "bg-blue-600/20 text-blue-400 border-blue-500/30", key: "admin" },
   FACTORY_MANAGER: { bg: "bg-emerald-600/20 text-emerald-400 border-emerald-500/30", key: "manager" },
   LOGISTICS_OFFICER: { bg: "bg-amber-600/20 text-amber-400 border-amber-500/30", key: "logistics" },
