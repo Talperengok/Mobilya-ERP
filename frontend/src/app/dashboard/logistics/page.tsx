@@ -94,7 +94,7 @@ export default function LogisticsPage() {
       queryClient.invalidateQueries({ queryKey: ["shipments"] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       setShowCreate(false);
-      setSelectedOrder("");
+      setSelectedOrders([]);
       setCourierName("");
       setErrorHeader(null);
     },
