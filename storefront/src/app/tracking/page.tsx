@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Search, Package, Box, Truck, MapPin, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
@@ -20,7 +20,7 @@ function useTracking(trackingNumber: string) {
   });
 }
 
-export default function TrackingPage() {
+function TrackingContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get("query") || "";
@@ -190,5 +190,13 @@ export default function TrackingPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function TrackingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[80vh] flex items-center justify-center"><Loader2 className="animate-spin text-amber-500" size={32} /></div>}>
+      <TrackingContent />
+    </Suspense>
   );
 }
