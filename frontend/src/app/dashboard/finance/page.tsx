@@ -619,7 +619,7 @@ export default function FinancePage() {
                 <tr className="bg-gray-800/50">
                   <th className="text-left px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.date}</th>
                   <th className="text-center px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.type}</th>
-                  <th className="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.total}</th>
+                  <th className="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.total}</th>
                   <th className="text-left px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.desc}</th>
                   <th className="text-left px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.ref}</th>
                 </tr>
