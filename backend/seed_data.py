@@ -166,9 +166,32 @@ def seed():
             db.add(BOMRouting(item_id=iid, sequence=seq, operation_name=name, workstation_type=ws_type, duration_seconds=dur))
     db.flush()
 
+    # --- USERS (Quick Login Accounts) ---
+    print("👤 Checking/Seeding Quick Login Users...")
+    quick_users = [
+        ("admin@mobilya.com", "admin123", UserRole.ADMIN),
+        ("fabrika@mobilya.com", "fabrika123", UserRole.FACTORY_MANAGER),
+        ("lojistik@mobilya.com", "lojistik123", UserRole.LOGISTICS_OFFICER),
+        ("satis@mobilya.com", "satis123", UserRole.SALES_REP),
+    ]
+
+    for email, password, role in quick_users:
+        existing = db.query(User).filter(User.email == email).first()
+        if existing:
+            # Update password to match frontend presets
+            existing.hashed_password = hash_password(password)
+            existing.role = role
+        else:
+            db.add(User(
+                email=email,
+                hashed_password=hash_password(password),
+                role=role,
+            ))
+    db.flush()
+
     db.commit()
     db.close()
-    print("✅ Database BOM/Routing saturation complete!")
+    print("✅ Database BOM/Routing/Users saturation complete!")
 
 if __name__ == "__main__":
     seed()
