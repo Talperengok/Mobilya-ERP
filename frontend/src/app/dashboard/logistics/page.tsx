@@ -55,7 +55,7 @@ export default function LogisticsPage() {
   const { data: readyOrders, isLoading: loadingOrders } = useReadyOrders();
 
   const [showCreate, setShowCreate] = useState(false);
-  const [activeTab, setActiveTab] = useState("preparing");
+  const [activeTab, setActiveTab] = useState<"preparing" | "ready" | "shipped" | "inTransit" | "delivered">("preparing");
   const tabFilters = {
     preparing: ["PREPARING"],
     ready: ["READY_FOR_PICKUP"],
