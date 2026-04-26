@@ -27,7 +27,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
       {/* Image placeholder */}
       <div className={`relative h-56 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
         <ShoppingBag size={48} className="text-white/10 group-hover:text-white/20 transition-all duration-300 group-hover:scale-110" />
-        {(product.available_stock <= 0) && (
+        {((product.available_stock || 0) <= 0) && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
             <span className="text-sm font-medium text-red-400 bg-red-500/20 px-3 py-1 rounded-full">{t.product.outOfStock}</span>
           </div>
