@@ -116,7 +116,7 @@ export default function ERPDashboard() {
              </div>
              <div className="space-y-1">
                <p className="text-sm font-medium text-gray-500 uppercase tracking-wider text-ellipsis whitespace-nowrap overflow-hidden" title="Gross Sales (Incl. VAT & Pending)">Brüt Satışlar</p>
-               <h3 className="text-2xl font-bold text-white">{formatCurrency(stats.revenue.gross, locale === 'tr' ? 'TRY' : 'USD')}</h3>
+               <h3 className="text-2xl font-bold text-white">{formatCurrency(stats.revenue.gross)}</h3>
                <p className="text-[10px] text-gray-400 flex items-center gap-1 mt-1">
                  Total from {stats.orders.total} orders
                </p>
@@ -126,7 +126,7 @@ export default function ERPDashboard() {
            <div className="mt-4 pt-4 border-t border-gray-800/50">
              <div className="space-y-1">
                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">Net Gelir (Faturalanmış)</p>
-               <h4 className="text-xl font-bold text-emerald-400">{formatCurrency(stats.revenue.net, locale === 'tr' ? 'TRY' : 'USD')}</h4>
+               <h4 className="text-xl font-bold text-emerald-400">{formatCurrency(stats.revenue.net)}</h4>
              </div>
            </div>
         </div>
