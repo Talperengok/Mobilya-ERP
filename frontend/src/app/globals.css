@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Scrollbar styling for dark theme ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111827;
+}
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* ── Glass card utility ── */
+@layer components {
+  .glass-card {
+    @apply bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-xl;
+  }
+  .stat-card {
+    @apply glass-card p-6 transition-all duration-300 hover:border-gray-700 hover:shadow-lg hover:shadow-blue-500/5;
+  }
+}
+
+/* ── Animation for live indicator ── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
