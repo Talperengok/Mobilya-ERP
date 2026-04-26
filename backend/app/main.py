@@ -80,6 +80,7 @@ def create_app() -> FastAPI:
             # Production (Vercel)
             "https://mobilya-storefront-flame.vercel.app",
             "https://mobilya-erp.vercel.app",
+            "https://mobilya-erp-6rih.vercel.app",
         ],
         allow_credentials=True,
         allow_methods=["*"],
