@@ -323,7 +323,7 @@ export default function LogisticsPage() {
                       <td className="px-6 py-4 text-center">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${conf.color}`}>
                           <Icon size={12} />
-                          {(t.logistics as Record<string, string>)?.[shipment.status.toLowerCase().replace('_', '')] || shipment.status.replace(/_/g, " ")}
+                          {(t.logistics as unknown as Record<string, string>)?.[shipment.status.toLowerCase().replace('_', '')] || shipment.status.replace(/_/g, " ")}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
