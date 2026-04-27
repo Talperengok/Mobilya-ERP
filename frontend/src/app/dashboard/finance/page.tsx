@@ -18,6 +18,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Receipt,
+  Clock,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -121,6 +122,25 @@ interface LedgerTx {
   }[];
 }
 
+interface ProvisionOrder {
+  id: number;
+  order_number: string;
+  customer_name: string;
+  status: string;
+  order_date: string;
+  subtotal: number;
+  vat_amount: number;
+  total_with_vat: number;
+  item_count: number;
+}
+
+interface ProvisionData {
+  orders: ProvisionOrder[];
+  total_provision: number;
+  total_with_vat: number;
+  count: number;
+}
+
 /* â•â•â• Hooks â•â•â• */
 
 function useSummary() {
@@ -153,6 +173,14 @@ function useLedger() {
     queryKey: ["finance", "ledger"],
     queryFn: async () => (await api.get("/finance/ledger")).data,
     refetchInterval: 5000,
+  });
+}
+
+function useProvisions() {
+  return useQuery<ProvisionData>({
+    queryKey: ["finance", "provisions"],
+    queryFn: async () => (await api.get("/finance/provisions")).data,
+    refetchInterval: 10000,
   });
 }
 
@@ -355,7 +383,7 @@ function WaybillViewer({ waybillId, onClose }: { waybillId: number; onClose: () 
 export default function FinancePage() {
   const { t, locale } = useTranslation();
   const { data: summary } = useSummary();
-  const [activeTab, setActiveTab] = useState<"invoices" | "waybills" | "ledger">("invoices");
+  const [activeTab, setActiveTab] = useState<"invoices" | "waybills" | "ledger" | "provisions">("invoices");
   const [invoiceFilter, setInvoiceFilter] = useState<string>("");
   const [viewInvoiceId, setViewInvoiceId] = useState<number | null>(null);
   const [viewWaybillId, setViewWaybillId] = useState<number | null>(null);
@@ -363,6 +391,7 @@ export default function FinancePage() {
   const { data: invoices } = useInvoices(invoiceFilter || undefined);
   const { data: waybills } = useWaybills();
   const { data: ledger } = useLedger();
+  const { data: provisions } = useProvisions();
 
   const profitPositive = (summary?.net_profit ?? 0) >= 0;
 
@@ -446,6 +475,7 @@ export default function FinancePage() {
           { key: "invoices", label: t.finance.tabs.invoices, icon: FileText },
           { key: "waybills", label: t.finance.tabs.waybills, icon: Truck },
           { key: "ledger", label: t.finance.tabs.ledger, icon: BookOpen },
+          { key: "provisions", label: t.finance.tabs.provisions, icon: Clock },
         ] as const).map(({ key, label, icon: Icon }) => (
           <button
             key={key}
@@ -455,6 +485,11 @@ export default function FinancePage() {
             }`}
           >
             <Icon size={14} /> {label}
+            {key === "provisions" && provisions && provisions.count > 0 && (
+              <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-400 rounded-full">
+                {provisions.count}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -653,6 +688,91 @@ export default function FinancePage() {
                   <tr>
                     <td colSpan={5} className="text-center py-12 text-gray-500">
                       {t.finance.empty.ledger}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ── Provisions Tab ── */}
+      {activeTab === "provisions" && (
+        <div className="glass-card overflow-hidden">
+          <div className="p-4 border-b border-gray-800 bg-gray-900/50 flex items-center justify-between">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <Clock className="text-amber-500" size={18} /> {t.finance.tabs.provisions}
+            </h3>
+            {provisions && (
+              <div className="flex items-center gap-4 text-sm">
+                <span className="text-gray-400">
+                  {provisions.count} sipariş &mdash;
+                  <span className="text-amber-400 font-bold font-mono ml-1">
+                    ₺{provisions.total_provision.toLocaleString(locale === "tr" ? "tr-TR" : "en-US", { minimumFractionDigits: 2 })}
+                  </span>
+                  <span className="text-gray-500 text-xs ml-1">(KDV Hariç)</span>
+                </span>
+                <span className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold rounded-full">
+                  Beklenen Ciro: ₺{provisions.total_with_vat.toLocaleString(locale === "tr" ? "tr-TR" : "en-US", { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-800/50">
+                  <th className="text-left px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.orders.details}</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.customers.title}</th>
+                  <th className="text-center px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.orders.status}</th>
+                  <th className="text-center px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.date}</th>
+                  <th className="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.subtotal}</th>
+                  <th className="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.tax}</th>
+                  <th className="text-right px-5 py-3 text-xs font-medium text-gray-400 uppercase">{t.finance.table.total}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800/50">
+                {provisions && provisions.orders.length > 0 ? provisions.orders.map((order) => {
+                  const statusColors: Record<string, string> = {
+                    PENDING: "bg-blue-500/20 text-blue-400",
+                    IN_PRODUCTION: "bg-purple-500/20 text-purple-400",
+                    READY: "bg-emerald-500/20 text-emerald-400",
+                    SHIPPED: "bg-amber-500/20 text-amber-400",
+                  };
+                  const statusLabels: Record<string, string> = {
+                    PENDING: t.dashboard.pending,
+                    IN_PRODUCTION: t.dashboard.inProduction,
+                    READY: t.dashboard.ready,
+                    SHIPPED: t.dashboard.shipped,
+                  };
+                  return (
+                    <tr key={order.id} className="hover:bg-gray-800/30 transition-colors">
+                      <td className="px-5 py-3">
+                        <div className="font-mono text-blue-400 text-xs">{order.order_number}</div>
+                        <div className="text-gray-500 text-xs mt-0.5">{order.item_count} ürün</div>
+                      </td>
+                      <td className="px-5 py-3 text-gray-300">{order.customer_name}</td>
+                      <td className="px-5 py-3 text-center">
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${statusColors[order.status] || "bg-gray-500/20 text-gray-400"}`}>
+                          {statusLabels[order.status] || order.status}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3 text-center text-xs text-gray-400">
+                        {order.order_date ? new Date(order.order_date).toLocaleString(locale === "tr" ? "tr-TR" : "en-US") : "-"}
+                      </td>
+                      <td className="px-5 py-3 text-right font-mono text-gray-300">₺{order.subtotal.toFixed(2)}</td>
+                      <td className="px-5 py-3 text-right font-mono text-amber-400">₺{order.vat_amount.toFixed(2)}</td>
+                      <td className="px-5 py-3 text-right font-mono font-semibold text-white">₺{order.total_with_vat.toFixed(2)}</td>
+                    </tr>
+                  );
+                }) : (
+                  <tr>
+                    <td colSpan={7} className="text-center py-12 text-gray-500">
+                      <div className="flex flex-col items-center gap-2 opacity-50">
+                        <Clock size={32} className="text-emerald-500" />
+                        Tüm siparişler teslim edildi — bekleyen sipariş yok.
+                      </div>
                     </td>
                   </tr>
                 )}
