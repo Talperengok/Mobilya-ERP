@@ -62,7 +62,8 @@ export const en = {
       waybills: "Waybills",
       ledger: "General Ledger",
       revenue: "REVENUE",
-      expense: "EXPENSE"
+      expense: "EXPENSE",
+      provisions: "Provisions"
     },
     table: {
       no: "No",

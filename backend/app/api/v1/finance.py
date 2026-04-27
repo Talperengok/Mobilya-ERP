@@ -265,3 +265,54 @@ def list_ledger_transactions(db: Session = Depends(get_db)):
         })
         
     return result
+
+
+@router.get("/provisions", dependencies=[Depends(RequireRole([UserRole.ADMIN, UserRole.FACTORY_MANAGER, UserRole.SALES_REP]))])
+def list_provisions(db: Session = Depends(get_db)):
+    """List open (undelivered) customer orders as financial provisions.
+    These are expected revenues not yet realized in the ledger."""
+    from app.models.order import Order, OrderStatus
+    from sqlalchemy.orm import joinedload
+
+    open_statuses = [
+        OrderStatus.PENDING,
+        OrderStatus.IN_PRODUCTION,
+        OrderStatus.READY,
+        OrderStatus.SHIPPED,
+    ]
+
+    orders = (
+        db.query(Order)
+        .options(joinedload(Order.customer), joinedload(Order.items))
+        .filter(Order.status.in_(open_statuses))
+        .order_by(Order.order_date.desc())
+        .all()
+    )
+
+    result = []
+    total_provision = 0.0
+    for o in orders:
+        subtotal = sum(float(oi.line_total) for oi in o.items)
+        # Approximate VAT (default 20%)
+        vat = round(subtotal * 0.20, 2)
+        total_with_vat = round(subtotal + vat, 2)
+        total_provision += subtotal
+        result.append({
+            "id": o.id,
+            "order_number": o.order_number,
+            "customer_name": o.customer.name if o.customer else "N/A",
+            "status": o.status.value,
+            "order_date": _utc_iso(o.order_date),
+            "subtotal": round(subtotal, 2),
+            "vat_amount": vat,
+            "total_with_vat": total_with_vat,
+            "item_count": len(o.items),
+        })
+
+    return {
+        "orders": result,
+        "total_provision": round(total_provision, 2),
+        "total_with_vat": round(total_provision * 1.20, 2),
+        "count": len(result),
+    }
+

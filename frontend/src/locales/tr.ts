@@ -62,7 +62,8 @@ export const tr = {
       waybills: "İrsaliyeler",
       ledger: "Muhasebe Defteri",
       revenue: "GELİR",
-      expense: "GİDER"
+      expense: "GİDER",
+      provisions: "Provizyon"
     },
     table: {
       no: "No",
