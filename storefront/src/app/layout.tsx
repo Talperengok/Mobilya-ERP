@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { CartSidebar } from "@/components/cart-sidebar";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
+import { Chatbot } from "@/components/chatbot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           <main className="min-h-screen">{children}</main>
           <CartSidebar />
           <Footer />
+          <Chatbot />
         </Providers>
       </body>
     </html>

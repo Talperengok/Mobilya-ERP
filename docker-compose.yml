@@ -78,6 +78,7 @@ services:
       - "3001:3000"
     environment:
       NEXT_PUBLIC_API_URL: "http://localhost:8000/api/v1"
+      GROQ_API_KEY: "${GROQ_API_KEY}"
     volumes:
       - ./storefront:/app
       - /app/node_modules
