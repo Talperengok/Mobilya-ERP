@@ -134,11 +134,11 @@ def get_inventory_view(db: Session = Depends(get_db)):
             "critical_stock_level": float(item.critical_stock_level),
             "target_stock_level": float(item.target_stock_level),
             "is_critical": (
-                float(item.stock_quantity) <= float(item.critical_stock_level)
+                (float(item.stock_quantity) - float(item.reserved_quantity)) <= float(item.critical_stock_level)
                 and float(item.critical_stock_level) > 0
             ),
             "is_low_stock": (
-                float(item.stock_quantity) <= float(item.critical_stock_level)
+                (float(item.stock_quantity) - float(item.reserved_quantity)) <= float(item.critical_stock_level)
                 and float(item.critical_stock_level) > 0
             ),
         }

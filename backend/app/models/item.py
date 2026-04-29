@@ -80,8 +80,8 @@ class Item(Base):
 
     @hybrid_property
     def is_critical(self) -> bool:
-        """True if stock is at or below critical level."""
-        return self.critical_stock_level > 0 and float(self.stock_quantity) <= float(self.critical_stock_level)
+        """True if available stock is at or below critical level."""
+        return self.critical_stock_level > 0 and self.available_stock <= float(self.critical_stock_level)
 
     def __repr__(self) -> str:
         return f"<Item(sku={self.sku!r}, name={self.name!r}, type={self.item_type.value})>"

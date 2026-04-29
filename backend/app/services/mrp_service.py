@@ -132,12 +132,9 @@ class MRPService:
 
             if available >= needed:
                 # ✅ Happy path — fulfill entirely from existing stock
-                # Settle: deduct physical stock and release reservation
-                product.stock_quantity = float(product.stock_quantity) - needed
-                product.reserved_quantity = float(product.reserved_quantity) - needed
-
-                # Consume from StockLots via FIFO for lot tracking audit trail
-                self._consume_stock_direct(product, needed)
+                # Stock is already reserved by order_service.
+                # Physical deduction and FIFO consumption will happen when the order is SHIPPED.
+                pass
             else:
                 # ⚠️ Partial or zero stock — need production
                 deficit = needed - max(0.0, available)

@@ -185,6 +185,15 @@ def update_order_status(order_id: int, status: str, db: Session = Depends(get_db
     order = db.get(Order, order_id)
     if not order:
         raise HTTPException(404, detail="Order not found")
-    order.status = OrderStatus(status)
+    new_status = OrderStatus(status)
+    if new_status == OrderStatus.CANCELLED and order.status != OrderStatus.CANCELLED:
+        if order.status in [OrderStatus.SHIPPED, OrderStatus.DELIVERED]:
+            raise HTTPException(400, "Cannot cancel an order that has already been shipped or delivered")
+        # Release reservations
+        for order_item in order.items:
+            product = order_item.item
+            product.reserved_quantity = max(0.0, float(product.reserved_quantity) - float(order_item.quantity))
+
+    order.status = new_status
     db.commit()
     return {"id": order.id, "status": order.status.value}

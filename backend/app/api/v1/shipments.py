@@ -115,6 +115,19 @@ def update_shipment_status(
             # Sync order status
             shipment.order.status = OrderStatus.SHIPPED
 
+            # ── DECREMENT PHYSICAL INVENTORY AND RELEASE RESERVATIONS ──
+            # The goods are physically leaving the warehouse now.
+            from app.services.mrp_service import MRPService
+            mrp = MRPService(db)
+            for order_item in shipment.order.items:
+                product = order_item.item
+                quantity = float(order_item.quantity)
+                product.stock_quantity = float(product.stock_quantity) - quantity
+                product.reserved_quantity = float(product.reserved_quantity) - quantity
+                
+                # Consume from StockLots via FIFO for lot tracking audit trail
+                mrp._consume_stock_direct(product, quantity)
+
         # ── AUTO-GENERATE WAYBILL (İrsaliye) ──
         from app.services.finance_service import generate_waybill
         generate_waybill(db, shipment.order, shipment)
