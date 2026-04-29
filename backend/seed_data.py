@@ -166,6 +166,46 @@ def seed():
             db.add(BOMRouting(item_id=iid, sequence=seq, operation_name=name, workstation_type=ws_type, duration_seconds=dur))
     db.flush()
 
+    # --- WORKSTATIONS ---
+    print("🏭 Checking/Seeding Workstations...")
+    if db.query(Workstation).count() == 0:
+        workstations = [
+            Workstation(name="CNC Router 1 (High Speed)", station_type=WorkstationType.CNC, is_available=True),
+            Workstation(name="CNC Router 2 (Precision)", station_type=WorkstationType.CNC, is_available=True),
+            Workstation(name="CNC Router 3 (Heavy Duty)", station_type=WorkstationType.CNC, is_available=True),
+            Workstation(name="Assembly Line A (Desks)", station_type=WorkstationType.ASSEMBLY, is_available=True),
+            Workstation(name="Assembly Line B (Chairs)", station_type=WorkstationType.ASSEMBLY, is_available=True),
+            Workstation(name="Assembly Line C (Cabinets)", station_type=WorkstationType.ASSEMBLY, is_available=True),
+            Workstation(name="Assembly Line D (General)", station_type=WorkstationType.ASSEMBLY, is_available=True),
+            Workstation(name="Paint & Finish Booth 1", station_type=WorkstationType.FINISHING, is_available=True),
+            Workstation(name="Paint & Finish Booth 2", station_type=WorkstationType.FINISHING, is_available=True),
+            Workstation(name="Welding Station 1", station_type=WorkstationType.WELDING, is_available=True),
+            Workstation(name="Welding Station 2", station_type=WorkstationType.WELDING, is_available=True),
+        ]
+        db.add_all(workstations)
+        db.flush()
+
+    # --- EMPLOYEES ---
+    print("👷 Checking/Seeding Employees...")
+    from app.models.employee import EmployeeStatus
+    if db.query(Employee).count() == 0:
+        employees = [
+            Employee(name="Ahmet Yılmaz", role=EmployeeRole.ASSEMBLER, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Mehmet Demir", role=EmployeeRole.ASSEMBLER, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Ayşe Kaya", role=EmployeeRole.ASSEMBLER, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Fatma Çelik", role=EmployeeRole.ASSEMBLER, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Ali Yıldız", role=EmployeeRole.TECHNICIAN, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Veli Şahin", role=EmployeeRole.TECHNICIAN, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Hasan Özcan", role=EmployeeRole.TECHNICIAN, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Hüseyin Aydın", role=EmployeeRole.PAINTER, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Mustafa Arslan", role=EmployeeRole.PAINTER, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Zeynep Doğan", role=EmployeeRole.QUALITY_INSPECTOR, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Elif Kılıç", role=EmployeeRole.QUALITY_INSPECTOR, status=EmployeeStatus.AVAILABLE),
+            Employee(name="Caner Kurt", role=EmployeeRole.ASSEMBLER, status=EmployeeStatus.AVAILABLE),
+        ]
+        db.add_all(employees)
+        db.flush()
+
     # --- USERS (Quick Login Accounts) ---
     print("👤 Checking/Seeding Quick Login Users...")
     quick_users = [
