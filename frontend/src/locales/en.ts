@@ -1,7 +1,7 @@
 export const en = {
-  roles: { admin: "Admin", manager: "Factory Manager", logistics: "Logistics Officer", sales: "Sales Representative" },
-  common: { loading: "Loading...", error: "An error occurred", refresh: "Refresh" },
-  sidebar: { title: "Mobilya ERP", dashboard: "Dashboard", inventory: "Inventory", orders: "Orders", customers: "Customers", production: "Production", logistics: "Logistics", rma: "RMA", hrm: "HR & Capacity", finance: "Finance", footer: "Furniture MRP Simulator" },
+  roles: { admin: "Admin", manager: "Factory Manager", logistics: "Logistics Officer", sales: "Sales Representative", customer: "Customer", title: "Role Management", description: "Manage module access permissions for each role.", selectRole: "Select Role", permissionsFor: "Permissions for", canView: "Can view page", cannotView: "No access", saveSuccess: "Permissions saved successfully!", saveError: "Failed to save permissions", fetchError: "Failed to fetch permissions" },
+  common: { loading: "Loading...", error: "An error occurred", refresh: "Refresh", save: "Save Changes" },
+  sidebar: { title: "Mobilya ERP", dashboard: "Dashboard", inventory: "Inventory", orders: "Orders", customers: "Customers", production: "Production", logistics: "Logistics", rma: "RMA", hrm: "HR & Capacity", finance: "Finance", roles: "Role Management", footer: "Furniture MRP Simulator" },
   orders: { 
     title: "Order Management", 
     subtitle: "Place orders to trigger the MRP engine", 

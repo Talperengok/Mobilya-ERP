@@ -7,7 +7,7 @@ from fastapi import APIRouter
 from app.api.v1 import (
     items, bom, customers, orders, production, dashboard,
     suppliers, purchase_orders, invoices, storefront,
-    auth, shipments, rma, hrm, finance
+    auth, shipments, rma, hrm, finance, permissions
 )
 
 api_router = APIRouter()
@@ -27,3 +27,4 @@ api_router.include_router(shipments.router)
 api_router.include_router(rma.router)
 api_router.include_router(hrm.router)
 api_router.include_router(finance.router)
+api_router.include_router(permissions.router, prefix="/permissions", tags=["Permissions"])

@@ -1,7 +1,7 @@
 export const tr = {
-  roles: { admin: "Admin", manager: "Fabrika Müdürü", logistics: "Lojistik Sorumlusu", sales: "Satış Temsilcisi" },
-  common: { loading: "Yükleniyor...", error: "Hata oluştu", refresh: "Yenile" },
-  sidebar: { title: "Mobilya ERP", dashboard: "Panel", inventory: "Envanter", orders: "Siparişler", customers: "Müşteriler", production: "Üretim", logistics: "Lojistik", rma: "İade ve Bakım", hrm: "İK & Kapasite", finance: "Finans", footer: "Mobilya MRP Simülatörü" },
+  roles: { admin: "Admin", manager: "Fabrika Müdürü", logistics: "Lojistik Sorumlusu", sales: "Satış Temsilcisi", customer: "Müşteri", title: "Rol Yönetimi", description: "Her bir rolün erişebileceği sayfaları ve modülleri yönetin.", selectRole: "Rol Seçin", permissionsFor: "Yetkiler:", canView: "Sayfayı görebilir", cannotView: "Erişim yok", saveSuccess: "Yetkiler başarıyla kaydedildi!", saveError: "Yetkiler kaydedilemedi", fetchError: "Yetkiler yüklenemedi" },
+  common: { loading: "Yükleniyor...", error: "Hata oluştu", refresh: "Yenile", save: "Değişiklikleri Kaydet" },
+  sidebar: { title: "Mobilya ERP", dashboard: "Panel", inventory: "Envanter", orders: "Siparişler", customers: "Müşteriler", production: "Üretim", logistics: "Lojistik", rma: "İade ve Bakım", hrm: "İK & Kapasite", finance: "Finans", roles: "Rol Yönetimi", footer: "Mobilya MRP Simülatörü" },
   orders: { 
     title: "Sipariş Yönetimi", 
     subtitle: "MRP sistemini tetiklemek için sipariş oluşturun", 

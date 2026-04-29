@@ -20,6 +20,7 @@ import {
   DollarSign,
   Users,
   RotateCcw,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -30,7 +31,6 @@ interface NavItem {
   href: string;
   key: string;
   icon: typeof LayoutDashboard;
-  allowedRoles: UserRole[];
 }
 
 const navItems: NavItem[] = [
@@ -38,55 +38,51 @@ const navItems: NavItem[] = [
     href: "/dashboard",
     key: "dashboard",
     icon: LayoutDashboard,
-    allowedRoles: ["ADMIN", "FACTORY_MANAGER", "LOGISTICS_OFFICER", "SALES_REP"],
   },
   {
     href: "/dashboard/inventory",
     key: "inventory",
     icon: Package,
-    allowedRoles: ["FACTORY_MANAGER"],
   },
   {
     href: "/dashboard/orders",
     key: "orders",
     icon: ShoppingCart,
-    allowedRoles: ["SALES_REP", "LOGISTICS_OFFICER", "FACTORY_MANAGER"],
   },
   {
     href: "/dashboard/customers",
     key: "customers",
     icon: Users,
-    allowedRoles: ["SALES_REP", "ADMIN"],
   },
   {
     href: "/dashboard/production",
     key: "production",
     icon: Factory,
-    allowedRoles: ["FACTORY_MANAGER"],
   },
   {
     href: "/dashboard/logistics",
     key: "logistics",
     icon: Truck,
-    allowedRoles: ["LOGISTICS_OFFICER"],
   },
   {
     href: "/dashboard/rma",
     key: "rma",
     icon: RotateCcw,
-    allowedRoles: ["SALES_REP", "ADMIN"],
   },
   {
     href: "/dashboard/hrm",
     key: "hrm",
     icon: Users,
-    allowedRoles: ["FACTORY_MANAGER", "ADMIN"],
   },
   {
     href: "/dashboard/finance",
     key: "finance",
     icon: DollarSign,
-    allowedRoles: ["SALES_REP", "ADMIN"],
+  },
+  {
+    href: "/dashboard/roles",
+    key: "roles",
+    icon: ShieldCheck,
   },
 ];
 
@@ -108,7 +104,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const { t, locale, setLocale } = useTranslation();
-  const { user, isAuthenticated, hasRole, logout } = useAuthStore();
+  const { user, isAuthenticated, hasPermission, logout } = useAuthStore();
 
   // ── Auth gate: redirect to /login if not authenticated ──
   useEffect(() => {
@@ -130,9 +126,9 @@ export default function DashboardLayout({
     );
   }
 
-  // ── Filter nav items by role ──
+  // ── Filter nav items by permissions ──
   const visibleNav = navItems.filter((item) =>
-    hasRole(item.allowedRoles)
+    hasPermission(item.key)
   );
 
   // ── Route guard: check if current path is allowed ──

@@ -29,6 +29,12 @@ async def lifespan(app: FastAPI):
     # Startup
     Base.metadata.create_all(bind=engine)
     
+    # Seed permissions
+    from app.db.session import SessionLocal
+    from app.db.seed_permissions import seed_default_permissions
+    with SessionLocal() as db:
+        seed_default_permissions(db)
+    
     # Start background MRP poller
     from app.services.mrp_poller import mrp_background_loop
     from app.services.reservation_cleaner import clean_stale_reservations_loop

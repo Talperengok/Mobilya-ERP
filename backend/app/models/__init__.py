@@ -24,6 +24,7 @@ from app.models.bom_routing import BOMRouting
 from app.models.operation_log import OperationLog, OperationStatus
 from app.models.stock_lot import StockLot
 from app.models.lot_consumption import LotConsumption
+from app.models.role_permission import RolePermission
 
 __all__ = [
     "Item", "ItemType",
@@ -46,4 +47,5 @@ __all__ = [
     "BOMRouting",
     "OperationLog", "OperationStatus",
     "StockLot", "LotConsumption",
+    "RolePermission",
 ]
