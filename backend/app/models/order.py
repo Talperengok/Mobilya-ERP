@@ -17,6 +17,7 @@ from app.db.base import Base
 
 class OrderStatus(str, enum.Enum):
     PENDING = "PENDING"
+    WAITING_FOR_MATERIALS = "WAITING_FOR_MATERIALS"
     IN_PRODUCTION = "IN_PRODUCTION"
     READY = "READY"
     SHIPPED = "SHIPPED"

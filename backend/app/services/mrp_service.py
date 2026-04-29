@@ -131,8 +131,13 @@ class MRPService:
             needed = order_item.quantity
 
             if available >= needed:
-                # ✅ Happy path — fulfill entirely from existing stock (reserved in order_service)
-                pass
+                # ✅ Happy path — fulfill entirely from existing stock
+                # Settle: deduct physical stock and release reservation
+                product.stock_quantity = float(product.stock_quantity) - needed
+                product.reserved_quantity = float(product.reserved_quantity) - needed
+
+                # Consume from StockLots via FIFO for lot tracking audit trail
+                self._consume_stock_direct(product, needed)
             else:
                 # ⚠️ Partial or zero stock — need production
                 deficit = needed - max(0.0, available)
@@ -218,7 +223,46 @@ class MRPService:
             
         return node
 
-    # ── Core Recursive Production ────────────────────────────────
+    # ── Direct Stock Consumption (no production log) ────────────
+
+    def _consume_stock_direct(self, item: Item, quantity: float):
+        """
+        Consume `quantity` units from StockLots via FIFO for direct fulfillment.
+        Unlike _consume_fifo, this does NOT require a ProductionLog —
+        used when finished goods are shipped directly from existing stock.
+        
+        Note: item.stock_quantity is already decremented by the caller;
+        this method only updates the StockLot.remaining_quantity values
+        to keep the lot ledger in sync.
+        """
+        from app.models.stock_lot import StockLot
+
+        lots = (
+            self.db.query(StockLot)
+            .filter(StockLot.item_id == item.id, StockLot.remaining_quantity > 0)
+            .order_by(StockLot.received_at.asc())
+            .with_for_update()
+            .all()
+        )
+
+        remaining_need = quantity
+        for lot in lots:
+            if remaining_need <= 0:
+                break
+            take = min(float(lot.remaining_quantity), remaining_need)
+            lot.remaining_quantity = float(lot.remaining_quantity) - take
+            remaining_need -= take
+
+        # If remaining_need > 0, lots are out of sync with stock_quantity.
+        # This is a data integrity issue from legacy data; log but don't crash.
+        if remaining_need > 0.0001:
+            import logging
+            logging.getLogger(__name__).warning(
+                f"StockLot deficit for {item.sku}: needed {quantity} from lots, "
+                f"but {remaining_need:.4f} units were not covered by any lot."
+            )
+
+    # ── FIFO Lot Consumption (with production log audit) ──────
 
     def _consume_fifo(self, item: Item, required_qty: float, prod_log: ProductionLog):
         """

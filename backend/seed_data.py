@@ -66,6 +66,26 @@ def seed():
 
     items = {i.sku: i for i in db.query(Item).all()}
 
+    # --- INITIAL STOCK LOTS (FIFO lot tracking) ---
+    # The MRP engine's _consume_fifo requires StockLot records to exist.
+    # Without these, even items with stock_quantity > 0 cannot be consumed.
+    print("📦 Checking/Seeding Initial Stock Lots...")
+    existing_lot_item_ids = {
+        row[0] for row in db.query(StockLot.item_id).filter(StockLot.source_type == "INITIAL").all()
+    }
+    for item in items.values():
+        if float(item.stock_quantity) > 0 and item.id not in existing_lot_item_ids:
+            lot = StockLot(
+                item_id=item.id,
+                source_type="INITIAL",
+                source_id=None,
+                initial_quantity=item.stock_quantity,
+                remaining_quantity=item.stock_quantity,
+                unit_cost=float(item.unit_cost),
+            )
+            db.add(lot)
+    db.flush()
+
     # --- BOM (TRULY COMPREHENSIVE) ---
     print("📋 Checking/Seeding BOMs (Final Check)...")
     existing_boms = db.query(BOMItem.parent_item_id, BOMItem.child_item_id).all()
