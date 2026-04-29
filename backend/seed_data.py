@@ -166,6 +166,18 @@ def seed():
             db.add(BOMRouting(item_id=iid, sequence=seq, operation_name=name, workstation_type=ws_type, duration_seconds=dur))
     db.flush()
 
+    # --- SUPPLIERS ---
+    print("🚚 Checking/Seeding Suppliers...")
+    if db.query(Supplier).count() == 0:
+        suppliers = [
+            Supplier(name="Kastamonu Entegre A.Ş.", contact_person="Ali Demir", email="ali@kastamonu.com", phone="+90 532 111 2233", address="Kastamonu Merkez OSB"),
+            Supplier(name="Yıldız Sunta MDF", contact_person="Ayşe Çelik", email="ayse@yildizsunta.com", phone="+90 533 444 5566", address="Kocaeli Gebze OSB"),
+            Supplier(name="Häfele Türkiye", contact_person="Mehmet Yılmaz", email="mehmet@hafele.com.tr", phone="+90 212 999 8877", address="İstanbul Dudullu OSB"),
+            Supplier(name="Boya-Kim Sanayi", contact_person="Fatma Öz", email="fatma@boyakim.com", phone="+90 544 333 2211", address="Bursa İnegöl Mobilya İhtisas OSB")
+        ]
+        db.add_all(suppliers)
+        db.flush()
+
     # --- WORKSTATIONS ---
     print("🏭 Checking/Seeding Workstations...")
     if db.query(Workstation).count() == 0:

@@ -16,12 +16,20 @@ import {
   Timer,
   Wrench,
   Users,
+  Plus,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Employee } from "@/types";
 
 const BASE_PRODUCTION_TIME = 40; // fallback if item doesn't specify
+
+function useInventory() {
+  return useQuery<any[]>({
+    queryKey: ["inventory-for-production"],
+    queryFn: async () => (await api.get("/dashboard/inventory")).data,
+  });
+}
 
 function useProduction() {
   return useQuery<ProductionOrder[]>({
@@ -357,6 +365,97 @@ function StartModal({
   );
 }
 
+// ── Create Manual Production Modal ──
+
+function CreateProductionModal({ onClose }: { onClose: () => void }) {
+  const queryClient = useQueryClient();
+  const { data: inventory } = useInventory();
+  
+  const [selectedItemId, setSelectedItemId] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Filter out RAW_MATERIAL
+  const producibleItems = inventory?.filter(i => i.item_type !== "RAW_MATERIAL") || [];
+
+  const handleCreate = async () => {
+    if (!selectedItemId || quantity <= 0) return alert("Select an item and enter valid quantity.");
+    setIsSubmitting(true);
+    try {
+      await api.post("/production/", {
+        item_id: parseInt(selectedItemId),
+        quantity: quantity
+      });
+      queryClient.invalidateQueries({ queryKey: ["production"] });
+      onClose();
+    } catch (e: any) {
+      alert("Failed to create: " + (e.response?.data?.detail || e.message));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-gray-900 border border-gray-700 p-6 rounded-xl shadow-2xl w-full max-w-md"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <Plus size={18} className="text-emerald-500" />
+          New Production Order
+        </h3>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-400 mb-1.5">Product to Manufacture</label>
+            <select
+              value={selectedItemId}
+              onChange={(e) => setSelectedItemId(e.target.value)}
+              className="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            >
+              <option value="">-- Select Product --</option>
+              {producibleItems.map(item => (
+                <option key={item.id} value={item.id}>
+                  {item.name} ({item.sku})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-400 mb-1.5">Quantity</label>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
+              className="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-6 mt-2 border-t border-gray-800">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-300 hover:text-white">
+            Cancel
+          </button>
+          <button
+            onClick={handleCreate}
+            disabled={isSubmitting || !selectedItemId || quantity <= 0}
+            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />}
+            Create Order
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Production Card ──
 
 function ProductionCard({
@@ -503,18 +602,28 @@ function ProductionCard({
 export default function ProductionPage() {
   const { data: orders, isLoading } = useProduction();
   const [activePo, setActivePo] = useState<ProductionOrder | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold flex items-center gap-3">
-          <Factory className="text-blue-500" />
-          Production Orders
-        </h1>
-        <p className="text-sm text-gray-400 mt-1">
-          Manufacturing history and material consumption audit trail
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-3">
+            <Factory className="text-blue-500" />
+            Production Orders
+          </h1>
+          <p className="text-sm text-gray-400 mt-1">
+            Manufacturing history and material consumption audit trail
+          </p>
+        </div>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-all shadow-lg shadow-blue-500/20"
+        >
+          <Plus size={16} />
+          New Production Order
+        </button>
       </div>
 
       {/* Summary */}
@@ -557,6 +666,10 @@ export default function ProductionPage() {
 
       {activePo && (
         <StartModal po={activePo} onClose={() => setActivePo(null)} />
+      )}
+      
+      {isCreateModalOpen && (
+        <CreateProductionModal onClose={() => setIsCreateModalOpen(false)} />
       )}
     </div>
   );
