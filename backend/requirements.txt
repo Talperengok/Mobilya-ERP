@@ -8,5 +8,5 @@ python-dotenv==1.2.2
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
 python-jose[cryptography]==3.4.0
-python-multipart==0.0.12
+python-multipart==0.0.31
 slowapi==0.1.9
